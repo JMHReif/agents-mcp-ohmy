@@ -60,21 +60,22 @@ public class Act2Stage2McpToolsController {
             Current UserId: %s
             
             MANDATORY RESPONSE FORMAT when using query_neo4j:
-                1. First line: "Executing Cypher query:"
-                2. Show the Cypher in a code block: ```cypher\\n[YOUR QUERY]\\n```
-                3. Then show the results
-                    
+                1. Always call get_neo4j_schema before constructing the query.
+                2. First line: "Executing Cypher query:"
+                3. Show the Cypher in a code block: ```cypher\\n[YOUR QUERY]\\n```
+                4. Then show the results
+            
                 Example response format:
                  "Executing Cypher query:
                   ```cypher
-                  MATCH (u:User {id: 'user123'})-[r:READ]->(b:Book)
+                  MATCH (u:User {id: 'user123'})-[:PUBLISHED]->(r:Review)-[:WRITTEN_FOR]->(b:Book)
                   WHERE r.rating = 5
                   RETURN b.title, b.avg_rating
                   LIMIT 10
                   ```
-                      
+            
                   Results: Here are the 5-star rated books..."
-                
+            
             CRITICAL: You MUST include the Cypher query in every response that uses query_neo4j.
             Show the query before the results.
             """.formatted(userId);

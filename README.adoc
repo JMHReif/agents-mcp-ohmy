@@ -24,38 +24,38 @@ Test the endpoints.
 ----
 #Traditional systems
 http ":8080/act1/five-star-books"
-http ":8080/act1/books-not-read?userId=8842281e1d1347389f2ab93d60773d4d"
-http ":8080/act1/count-read-books?userId=8842281e1d1347389f2ab93d60773d4d"
+http ":8080/act1/books-not-read"
+http ":8080/act1/count-read-books"
 
 #Agentic tools
 ##Count books method
-http ":8080/act2/stage1/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=how many books have I read?"
+http ":8080/act2/stage1/query?userQuery=how many books have I read?"
 ##Find books not read method
-http ":8080/act2/stage1/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=could you find well-rated books for me to read?"
+http ":8080/act2/stage1/query?userQuery=could you find well-rated books for me to read?"
 ##Best rated books method
-http ":8080/act2/stage1/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=what are the best rated books?"
+http ":8080/act2/stage1/query?userQuery=what are the best rated books?"
 ##RAG method (reviews)
 http ":8080/act2/stage1/query?userQuery=could you find book reviews where readers changed their perspective throughout the book?"
 ##GraphRAG
-http ":8080/act2/stage1/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=I want to find fantasy books about dragons and magic"
-http ":8080/act2/stage1/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=what are some nonfiction books on productivity?"
+http ":8080/act2/stage1/query?userQuery=I want to find fantasy books about dragons and magic"
+http ":8080/act2/stage1/query?userQuery=what are some nonfiction books on productivity?"
 
 ##MCP tools
 http ":8080/act2/stage2/debug/tools"
 ##Count books method
-http ":8080/act2/stage2/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=how many books have I read?"
+http ":8080/act2/stage2/query?userQuery=how many books have I read?"
 ##Find books not read method
-http ":8080/act2/stage2/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=could you find well-rated books for me to read?"
+http ":8080/act2/stage2/query?userQuery=could you find well-rated books for me to read?"
 ##Best rated books method
-http ":8080/act2/stage2/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=what are the best rated books?"
+http ":8080/act2/stage2/query?userQuery=what are the best rated books?"
 ##RAG method (reviews)
 http ":8080/act2/stage2/query?userQuery=could you find book reviews where readers changed their perspective throughout the book?"
 ##GraphRAG
-http ":8080/act2/stage2/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=I want to find fantasy books about dragons and magic"
-http ":8080/act2/stage2/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=what are some nonfiction books on productivity?"
+http ":8080/act2/stage2/query?userQuery=I want to find fantasy books about dragons and magic"
+http ":8080/act2/stage2/query?userQuery=what are some nonfiction books on productivity?"
 ##MCP tools
-http ":8080/act2/stage2/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=what is the leaderboard for number of books each user has read?"
-http ":8080/act2/stage2/query?userId=8842281e1d1347389f2ab93d60773d4d&userQuery=which authors wrote the most books?"
+http ":8080/act2/stage2/query?userQuery=what is the leaderboard for number of books each user has read?"
+http ":8080/act2/stage2/query?userQuery=which authors wrote the most books?"
 ----
 
 == Presentation slides
