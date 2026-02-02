@@ -60,10 +60,11 @@ public class Act2Stage2McpToolsController {
             Current UserId: %s
             
             MANDATORY RESPONSE FORMAT when using query_neo4j:
-                1. Always call get_neo4j_schema before constructing the query.
-                2. First line: "Executing Cypher query:"
-                3. Show the Cypher in a code block: ```cypher\\n[YOUR QUERY]\\n```
-                4. Then show the results
+                1. Always call get_schema before constructing the query.
+                2. Limit results to avoid too much data returning.
+                3. First line: "Executing Cypher query:"
+                4. Show the Cypher in a code block: ```cypher\\n[YOUR QUERY]\\n```
+                5. Then show the results
             
                 Example response format:
                  "Executing Cypher query:
