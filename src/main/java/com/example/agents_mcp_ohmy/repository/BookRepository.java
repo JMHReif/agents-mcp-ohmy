@@ -9,14 +9,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Spring Data Neo4j Repository for Book queries
- * Demonstrates the traditional approach with hardcoded queries
+ * Spring Data Neo4j Repository for Book queries.
+ * Includes basic queries, multi-hop graph traversals, and GraphRAG support.
  */
 @Repository
 public interface BookRepository extends Neo4jRepository<Book, String> {
 
     /**
-     * Hardcoded query: Get books rated 5 stars
+     * Get books rated 5 stars
      */
     @Query("""
         MATCH (u:User)-[rel:PUBLISHED]->(r:Review)-[rel2:WRITTEN_FOR]->(b:Book)
@@ -30,8 +30,7 @@ public interface BookRepository extends Neo4jRepository<Book, String> {
     List<Book> findFiveStarBooks();
 
     /**
-     * For Acts 1 and 2
-     * Hardcoded query: Get well-rated books that the user hasn't read
+     * Get well-rated books that the user hasn't read
      */
     @Query("""
         MATCH (b:Book)<-[rel:AUTHORED]-(a:Author)
@@ -43,8 +42,7 @@ public interface BookRepository extends Neo4jRepository<Book, String> {
     List<Book> findBooksNotRead(@Param("userId") String userId);
 
     /**
-     * For Acts 1 and 2
-     * Hardcoded query: Count books user has read
+     * Count books user has read
      */
     @Query("""
         MATCH (u:User {user_id: $userId})-[rel:PUBLISHED]->(r:Review)-[rel2:WRITTEN_FOR]->(b:Book)
@@ -53,8 +51,7 @@ public interface BookRepository extends Neo4jRepository<Book, String> {
     Long countBooksReadByUser(@Param("userId") String userId);
 
     /**
-     * For Act 2 GraphRAG: Enrich seed books with graph-based recommendations
-     * Takes seed book titles from vector search and expands via graph relationships
+     * GraphRAG: Enrich seed reviews from vector search with graph-based recommendations
      */
     @Query("""
         MATCH (b:Book)<-[rel:WRITTEN_FOR]-(r:Review)
@@ -67,4 +64,47 @@ public interface BookRepository extends Neo4jRepository<Book, String> {
         @Param("reviewIds") List<String> reviewIds,
         @Param("userId") String userId
     );
+
+    /**
+     * Multi-hop graph traversal: Find other books by the same author.
+     * Path: Book <- AUTHORED <- Author -> AUTHORED -> OtherBook
+     *
+     * This is a graph-native query that LLMs cannot reason about on their own.
+     */
+    @Query("""
+        MATCH (b:Book)<-[:AUTHORED]-(a:Author)-[:AUTHORED]->(other:Book)
+        WHERE toLower(b.title) CONTAINS toLower($keyword)
+        AND other <> b
+        WITH DISTINCT other
+        OPTIONAL MATCH (other)<-[rel:AUTHORED]-(otherAuthor:Author)
+        RETURN other, collect(rel), collect(otherAuthor)
+        ORDER BY other.average_rating DESC
+        LIMIT 5
+        """)
+    List<Book> findOtherBooksBySameAuthor(@Param("keyword") String keyword);
+
+    /**
+     * Multi-hop graph traversal: Collaborative filtering via graph relationships.
+     * Path: User -> Review -> Book <- Review <- OtherUser -> Review -> RecommendedBook
+     *
+     * Finds users who share highly-rated books with the given user,
+     * then recommends books those similar users also rated highly.
+     * This is a 6-hop traversal — pure graph-native reasoning.
+     */
+    @Query("""
+        MATCH (u:User {user_id: $userId})-[:PUBLISHED]->(r:Review)-[:WRITTEN_FOR]->(b:Book)
+              <-[:WRITTEN_FOR]-(r2:Review)<-[:PUBLISHED]-(other:User)
+        WHERE r.rating >= 4 AND r2.rating >= 4 AND other <> u
+        WITH u, other, collect(DISTINCT b) as sharedBooks
+        WHERE size(sharedBooks) >= 2
+        MATCH (other)-[:PUBLISHED]->(or2:Review)-[:WRITTEN_FOR]->(rec:Book)
+        WHERE or2.rating >= 4
+        AND NOT (u)-[:PUBLISHED]->(:Review)-[:WRITTEN_FOR]->(rec)
+        WITH DISTINCT rec
+        OPTIONAL MATCH (rec)<-[rel:AUTHORED]-(a:Author)
+        RETURN rec, collect(rel), collect(a)
+        ORDER BY rec.average_rating DESC
+        LIMIT 5
+        """)
+    List<Book> findCollaborativeRecommendations(@Param("userId") String userId);
 }
