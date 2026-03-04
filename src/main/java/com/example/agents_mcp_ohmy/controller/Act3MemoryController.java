@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/act3")
 public class Act3MemoryController {
-
-    private static final Logger log = LoggerFactory.getLogger(Act3MemoryController.class);
     private final ChatClient chatClient;
 
     public Act3MemoryController(
@@ -37,11 +35,6 @@ public class Act3MemoryController {
                 .defaultTools(bookToolService)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
                 .build();
-
-        log.info("========================================");
-        log.info("  Act 3: Memory Mode Initialized");
-        log.info("  Conversation memory backed by Neo4j");
-        log.info("========================================");
     }
 
     /**
@@ -54,8 +47,6 @@ public class Act3MemoryController {
             @RequestParam(defaultValue = "8842281e1d1347389f2ab93d60773d4d") String userId,
             @RequestParam String userQuery,
             @RequestParam(defaultValue = "demo") String conversationId) {
-
-        log.info(">>> Act 3 query [conversationId={}]: {}", conversationId, userQuery);
 
         String systemPrompt = """
                 Current UserId: %s
@@ -78,7 +69,6 @@ public class Act3MemoryController {
                 .call()
                 .content();
 
-        log.info("<<< Act 3 response [conversationId={}]: {} chars", conversationId, response.length());
         return response;
     }
 }

@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/act4")
 public class Act4McpController {
-
-    private static final Logger log = LoggerFactory.getLogger(Act4McpController.class);
     private final ChatClient chatClient;
     private final SyncMcpToolCallbackProvider mcpProvider;
 
@@ -38,23 +36,6 @@ public class Act4McpController {
                 .defaultTools(bookToolService)
                 .build();
         this.mcpProvider = mcpProvider;
-    }
-
-    /**
-     * Log discovered MCP tools at startup — demonstrates dynamic tool discovery.
-     * This is the "aha!" moment: tools loaded via protocol, not hardcoded.
-     */
-    @PostConstruct
-    public void logDiscoveredTools() {
-        var callbacks = mcpProvider.getToolCallbacks();
-        log.info("========================================");
-        log.info("  Act 4: MCP Tool Discovery");
-        log.info("  Discovered {} tools:", callbacks.length);
-        for (var cb : callbacks) {
-            log.info("    - {}", cb.getToolDefinition().name());
-        }
-        log.info("  Tools loaded dynamically via protocol!");
-        log.info("========================================");
     }
 
     /**

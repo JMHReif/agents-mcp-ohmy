@@ -86,7 +86,7 @@ Everything from Act 2, plus conversation memory stored in Neo4j. Follow-up quest
 http ":8080/act3/query?userQuery=What books should I read next based on what readers with similar taste enjoyed?&conversationId=demo1"
 
 # Another follow-up — chained reasoning across the conversation
-http ":8080/act3/query?userQuery=Who are the authors of those books?&conversationId=demo1"
+http ":8080/act3/query?userQuery=Who are the publishers of those books?&conversationId=demo1"
 
 # Start a fresh conversation (different conversationId)
 http ":8080/act3/query?userQuery=What books should I read next based on what readers with similar taste enjoyed?&userId=0007f8dd09337afd986d765569cf0110&conversationId=demo2"

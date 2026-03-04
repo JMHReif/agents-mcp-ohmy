@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/act2")
 public class Act2ToolsController {
-
-    private static final Logger log = LoggerFactory.getLogger(Act2ToolsController.class);
     private final ChatClient chatClient;
 
     public Act2ToolsController(ChatClient.Builder chatClientBuilder, BookToolService bookToolService) {
@@ -27,11 +25,6 @@ public class Act2ToolsController {
                 .defaultSystem("You are a helpful reading assistant. You have access to tools that can query a book database.")
                 .defaultTools(bookToolService)
                 .build();
-
-        log.info("========================================");
-        log.info("  Act 2: Tools Mode Initialized");
-        log.info("  Registered manual @Tool methods");
-        log.info("========================================");
     }
 
     /**
