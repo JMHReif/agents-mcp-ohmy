@@ -134,7 +134,7 @@ Act 4: User → LLM → MCP Protocol → Neo4j MCP Server → Neo4j
 
 == Presentation slides
 
-* _Coming soon!_
+* https://speakerdeck.com/jmhreif/agents-tools-and-mcp-oh-my-next-level-ai-concepts-for-developers-d63d9e50-66b6-48a1-81a8-9b098bfb1a47[Devnexus 2026^]
 
 == Resources
 
