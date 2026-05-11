@@ -60,7 +60,7 @@ http ":8080/act2/query?userQuery=Could you find well-rated books for me to read?
 http ":8080/act2/query?userQuery=How many books have I read?"
 
 # Multi-hop graph traversal: author's other works
-http ":8080/act2/query?userQuery=I loved Dune. What else did that author write?"
+http ":8080/act2/query?userQuery=I loved Charlotte's Web. What else did that author write?"
 
 # Multi-hop graph traversal: collaborative filtering
 http ":8080/act2/query?userQuery=Recommend books based on what readers with similar taste enjoyed"

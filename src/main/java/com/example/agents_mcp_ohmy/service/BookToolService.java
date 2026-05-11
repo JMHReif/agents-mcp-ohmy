@@ -38,7 +38,7 @@ public class BookToolService {
     public List<Book> getHighlyRatedBooks() {
         log.info(">>> TOOL CALLED: getHighlyRatedBooks");
         List<Book> results = bookRepository.findFiveStarBooks();
-        log.info("<<< TOOL RESULT: Found {} five-star books", results.size());
+        log.info("<<< TOOL RESULT: Found {} five-star books: {}", results.size(), results);
         return results;
     }
 
@@ -49,7 +49,7 @@ public class BookToolService {
     public List<Book> getQualityRecommendations(String userId) {
         log.info(">>> TOOL CALLED: getQualityRecommendations(userId={})", userId);
         List<Book> results = bookRepository.findBooksNotRead(userId);
-        log.info("<<< TOOL RESULT: Found {} unread quality books", results.size());
+        log.info("<<< TOOL RESULT: Found {} unread quality books: {}", results.size(), results);
         return results;
     }
 
@@ -74,7 +74,7 @@ public class BookToolService {
     public List<Book> findOtherBooksBySameAuthor(String keyword) {
         log.info(">>> TOOL CALLED: findOtherBooksBySameAuthor(keyword={})", keyword);
         List<Book> results = bookRepository.findOtherBooksBySameAuthor(keyword);
-        log.info("<<< TOOL RESULT: Found {} books by the same author(s)", results.size());
+        log.info("<<< TOOL RESULT: Found {} books by the same author(s): {}", results.size(), results);
         return results;
     }
 
@@ -89,7 +89,7 @@ public class BookToolService {
     public List<Book> getReaderRecommendations(String userId) {
         log.info(">>> TOOL CALLED: getReaderRecommendations(userId={})", userId);
         List<Book> results = bookRepository.findCollaborativeRecommendations(userId);
-        log.info("<<< TOOL RESULT: Found {} collaborative recommendations", results.size());
+        log.info("<<< TOOL RESULT: Found {} collaborative recommendations: {}", results.size(), results);
         return results;
     }
 
@@ -104,7 +104,7 @@ public class BookToolService {
         log.info(">>> TOOL CALLED: findBookReviewsByDescription(description={})", description);
         try {
             List<Document> similarReviews = vectorStore.similaritySearch(description);
-            log.info("<<< TOOL RESULT: Found {} similar reviews via vector search", similarReviews.size());
+            log.info("<<< TOOL RESULT: Found {} similar reviews via vector search: {}", similarReviews.size(), similarReviews);
             return similarReviews;
         } catch (Exception e) {
             log.error("<<< TOOL ERROR: Vector RAG failed - {}", e.getMessage());
@@ -144,7 +144,7 @@ public class BookToolService {
                     userId != null ? userId : "user123"
             );
 
-            log.info("<<< TOOL RESULT: Found {} graph-enriched recommendations", graphRecommendations.size());
+            log.info("<<< TOOL RESULT: Found {} graph-enriched recommendations: {}", graphRecommendations.size(), graphRecommendations);
             return graphRecommendations;
         } catch (Exception e) {
             log.error("<<< TOOL ERROR: GraphRAG failed - {}", e.getMessage());

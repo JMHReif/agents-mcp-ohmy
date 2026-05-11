@@ -2,10 +2,16 @@ package com.example.agents_mcp_ohmy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+// TODO: Spring AI 2.0.0-M6 bug — Neo4jChatMemoryRepository passes Optional values from OpenAI response
+//  metadata to the Neo4j driver, which can't serialize them. Workaround: override with in-memory storage.
+//  Remove once fixed upstream: https://github.com/spring-projects/spring-ai/issues
+import org.springframework.ai.chat.memory.ChatMemoryRepository;
+import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 @SpringBootApplication
 public class AgentsMcpOhmyApplication {
@@ -14,6 +20,12 @@ public class AgentsMcpOhmyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AgentsMcpOhmyApplication.class, args);
+	}
+
+	@Bean
+	@Primary
+	ChatMemoryRepository chatMemoryRepository() {
+		return new InMemoryChatMemoryRepository();
 	}
 
 	@Bean

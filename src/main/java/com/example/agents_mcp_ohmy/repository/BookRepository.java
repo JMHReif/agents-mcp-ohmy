@@ -72,12 +72,15 @@ public interface BookRepository extends Neo4jRepository<Book, String> {
      * This is a graph-native query that LLMs cannot reason about on their own.
      */
     @Query("""
-        MATCH (b:Book)<-[:AUTHORED]-(a:Author)-[:AUTHORED]->(other:Book)
+        MATCH (b:Book)
         WHERE toLower(b.title) CONTAINS toLower($keyword)
-        AND other <> b
-        WITH DISTINCT other
-        OPTIONAL MATCH (other)<-[rel:AUTHORED]-(otherAuthor:Author)
-        RETURN other, collect(rel), collect(otherAuthor)
+        WITH b.work_id AS workId LIMIT 1
+        MATCH (a:Author)-[:AUTHORED]->(c:Book {work_id: workId})
+        WITH workId, a, count(c) AS editionCount
+        ORDER BY editionCount DESC LIMIT 1
+        MATCH (a)-[rel:AUTHORED]->(other:Book)
+        WHERE other.work_id <> workId
+        RETURN DISTINCT other, collect(rel), collect(a)
         ORDER BY other.average_rating DESC
         LIMIT 5
         """)

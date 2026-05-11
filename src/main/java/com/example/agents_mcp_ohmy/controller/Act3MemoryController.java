@@ -51,15 +51,15 @@ public class Act3MemoryController {
         String systemPrompt = """
                 Current UserId: %s
 
-                MANDATORY RESPONSE FORMAT when using query_neo4j:
-                    1. Always call get_schema before constructing the query.
-                    2. Limit results to avoid too much data returning.
-                    3. First line: "Executing Cypher query:"
-                    4. Show the Cypher in a code block: ```cypher\\n[YOUR QUERY]\\n```
-                    5. Then show the results
+                You have access to book tools for common queries, and a query_neo4j MCP tool for custom queries.
+                Prefer the book tools when they can answer the question.
 
-                CRITICAL: You MUST include the Cypher query in every response that uses query_neo4j.
-                Show the query before the results.
+                Only when using query_neo4j:
+                    1. Call get_schema once to understand the data model, then construct your query.
+                    2. Limit results of up to 10 to avoid returning too much data.
+                    3. Show the Cypher query in a code block, then the results.
+                    4. If the data needed to answer the question is not in the schema, say so and stop.
+                    5. Do not retry more than once if a query returns no results.
                 """.formatted(userId);
 
         String response = chatClient.prompt()
