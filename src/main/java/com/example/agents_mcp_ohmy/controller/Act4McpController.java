@@ -32,7 +32,7 @@ public class Act4McpController {
 
         this.chatClient = chatClientBuilder
                 .defaultSystem("You are a helpful reading assistant with access to tools for querying a book database.")
-                .defaultToolCallbacks(mcpProvider.getToolCallbacks())
+                .defaultTools(mcpProvider.getToolCallbacks())
                 .defaultTools(bookToolService)
                 .build();
         this.mcpProvider = mcpProvider;

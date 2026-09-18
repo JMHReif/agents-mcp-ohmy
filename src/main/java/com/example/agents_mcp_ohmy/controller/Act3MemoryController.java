@@ -31,7 +31,7 @@ public class Act3MemoryController {
 
         this.chatClient = chatClientBuilder
                 .defaultSystem("You are a helpful reading assistant with access to tools for querying a book database.")
-                .defaultToolCallbacks(mcpProvider.getToolCallbacks())
+                .defaultTools(mcpProvider.getToolCallbacks())
                 .defaultTools(bookToolService)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
                 .build();
