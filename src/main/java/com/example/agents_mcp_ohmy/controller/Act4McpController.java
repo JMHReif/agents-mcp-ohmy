@@ -8,6 +8,8 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * ACT 4: AI Agent with MCP (Model Context Protocol) — "The Standard"
  *
@@ -79,6 +81,7 @@ public class Act4McpController {
         return chatClient.prompt()
                 .system(systemPrompt)
                 .user(userQuery)
+                .toolContext(Map.of("userId", userId))
                 .call()
                 .content();
     }

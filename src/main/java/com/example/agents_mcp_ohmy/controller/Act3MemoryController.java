@@ -9,6 +9,8 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * ACT 3: Memory — "The Brain Remembers"
  *
@@ -66,6 +68,7 @@ public class Act3MemoryController {
                 .system(systemPrompt)
                 .user(userQuery)
                 .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
+                .toolContext(Map.of("userId", userId))
                 .call()
                 .content();
 

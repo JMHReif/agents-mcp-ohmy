@@ -54,7 +54,7 @@ Same questions, but now the agent has `@Tool` methods that can query Neo4j.
 http ":8080/act2/query?userQuery=What are the highest rated books?"
 
 # Personalized recommendations (tools query the graph)
-http ":8080/act2/query?userQuery=Could you find well-rated books for me to read?"
+http ":8080/act2/query?userQuery=What should I read?"
 
 # Count books read
 http ":8080/act2/query?userQuery=How many books have I read?"

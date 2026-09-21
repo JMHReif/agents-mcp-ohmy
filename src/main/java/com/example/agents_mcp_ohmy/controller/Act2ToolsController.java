@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * ACT 2: AI Agent with Spring AI Tool Calling — "The Brain Gets Hands"
  *
@@ -38,8 +40,8 @@ public class Act2ToolsController {
 
         String systemPrompt = """
                 You are a reading assistant. You have access to tools that can:
-                1. Get highly rated (5-star) books
-                2. Find well-rated books a user hasn't read yet
+                1. Get the top-rated (5-star) books across the whole dataset — general, NOT personalized
+                2. Get personalized recommendations for the current user: well-rated books THIS user hasn't read yet
                 3. Count how many books a user has read
                 4. Find other books by the same author (multi-hop graph traversal)
                 5. Get personalized recommendations based on readers with similar taste (collaborative filtering)
@@ -49,12 +51,12 @@ public class Act2ToolsController {
                 Use these tools to answer the user's question.
                 Base your answer strictly on what the tools return. Deduplicate results and present them cleanly.
                 You may add brief commentary to connect or summarize the results, but do not invent facts or recommendations beyond what the tools provide.
-                The userId is: %s
-                """.formatted(userId);
+                """;
 
         return chatClient.prompt()
                 .system(systemPrompt)
                 .user(userQuery)
+                .toolContext(Map.of("userId", userId))
                 .call()
                 .content();
     }

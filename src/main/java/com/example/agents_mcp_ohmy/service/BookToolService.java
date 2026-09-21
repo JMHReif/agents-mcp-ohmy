@@ -4,6 +4,7 @@ import com.example.agents_mcp_ohmy.domain.Book;
 import com.example.agents_mcp_ohmy.repository.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -32,9 +33,19 @@ public class BookToolService {
     }
 
     /**
+     * userId comes from the request, not from the LLM, so it's passed via ToolContext
+     * rather than as a tool argument the model would have to retype.
+     */
+    private static String userIdFrom(ToolContext toolContext) {
+        return (String) toolContext.getContext().get("userId");
+    }
+
+    /**
      * Tool 1: Get 5-star books
      */
-    @Tool(description = "Get books rated highly (5 stars). Returns list of Book objects.")
+    @Tool(description = "Get the top-rated books (5 stars) across the WHOLE dataset. NOT personalized to any " +
+            "user — use for general 'best/top rated books' questions, not for 'recommend me' or 'for me' requests. " +
+            "Returns list of Book objects.")
     public List<Book> getHighlyRatedBooks() {
         log.info(">>> TOOL CALLED: getHighlyRatedBooks");
         List<Book> results = bookRepository.findFiveStarBooks();
@@ -45,8 +56,11 @@ public class BookToolService {
     /**
      * Tool 2: Get books rated highly (4-5 stars) that user hasn't read
      */
-    @Tool(description = "Get books rated highly (4 or 5 stars) that user hasn't read. Returns list of Book objects.")
-    public List<Book> getQualityRecommendations(String userId) {
+    @Tool(description = "Get PERSONALIZED book recommendations for the current user: well-rated books (4 or 5 " +
+            "stars) that THIS user specifically hasn't read yet. Use for 'recommend me something' or 'what should " +
+            "I read next' requests. Returns list of Book objects.")
+    public List<Book> getQualityRecommendations(ToolContext toolContext) {
+        String userId = userIdFrom(toolContext);
         log.info(">>> TOOL CALLED: getQualityRecommendations(userId={})", userId);
         List<Book> results = bookRepository.findBooksNotRead(userId);
         log.info("<<< TOOL RESULT: Found {} unread quality books: {}", results.size(), results);
@@ -57,7 +71,8 @@ public class BookToolService {
      * Tool 3: Count how many books user has read
      */
     @Tool(description = "Count the total number of books a user has read. Returns a Long count.")
-    public Long countBooksRead(String userId) {
+    public Long countBooksRead(ToolContext toolContext) {
+        String userId = userIdFrom(toolContext);
         log.info(">>> TOOL CALLED: countBooksRead(userId={})", userId);
         Long count = bookRepository.countBooksReadByUser(userId);
         log.info("<<< TOOL RESULT: User has read {} books", count);
@@ -86,7 +101,8 @@ public class BookToolService {
     @Tool(description = "Get personalized book recommendations based on collaborative filtering. " +
             "Finds books that readers with similar taste also enjoyed. " +
             "This uses multi-hop graph traversal for graph-native reasoning.")
-    public List<Book> getReaderRecommendations(String userId) {
+    public List<Book> getReaderRecommendations(ToolContext toolContext) {
+        String userId = userIdFrom(toolContext);
         log.info(">>> TOOL CALLED: getReaderRecommendations(userId={})", userId);
         List<Book> results = bookRepository.findCollaborativeRecommendations(userId);
         log.info("<<< TOOL RESULT: Found {} collaborative recommendations: {}", results.size(), results);
@@ -120,7 +136,8 @@ public class BookToolService {
     @Tool(description = "Find book information semantically similar to user's topics or themes. " +
             "Use this when the user is looking for book information similar to their theme or topic. " +
             "Returns a list of books.")
-    public List<Book> findBooksWithGraphRAG(String description, String userId) {
+    public List<Book> findBooksWithGraphRAG(String description, ToolContext toolContext) {
+        String userId = userIdFrom(toolContext);
         log.info(">>> TOOL CALLED: findBooksWithGraphRAG(description={}, userId={})", description, userId);
         try {
             // Step 1: Vector search to find semantically similar reviews
