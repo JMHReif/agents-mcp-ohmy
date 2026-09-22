@@ -134,9 +134,10 @@ Act 4: User → LLM → MCP Protocol → Neo4j MCP Server → Neo4j
 
 == Presentation slides
 
+* https://speakerdeck.com/jmhreif/agents-tools-and-mcp-oh-my-next-level-ai-concepts-for-developers-59aa3d4a-6771-4c6b-94d3-f3ddec253a54[TriJUG, CharlotteJUG, RichmondJUG/GraphRVA (Sept 2026)^]
 * https://speakerdeck.com/jmhreif/agentstoolsmcp-javamug-may2026[JavaMUG meetup (May 2026)^]
 * https://speakerdeck.com/jmhreif/agents-tools-and-mcp-oh-my-next-level-ai-concepts-for-developers-d63d9e50-66b6-48a1-81a8-9b098bfb1a47[Devnexus 2026^]
 
 == Resources
 
-* Neo4j courses: https://graphacademy.neo4j.com/knowledge-graph-rag/[Knowledge graph, RAG, and MCP^]
+* Neo4j courses: https://graphacademy.neo4j.com/categories/generative-ai[Graphs and AI^]
